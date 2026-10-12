@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Faculty{% endblock %}{% block content %}
+<div class="page-heading"><div><span class="eyebrow">RECORD MANAGEMENT</span><h1>Faculty</h1><p>Manage teaching staff and department information.</p></div><span class="count-pill">{{ faculty|length }} records</span></div>
+<div class="panel"><div class="panel-head"><div><h2>Add faculty member</h2><p>Enter staff details below.</p></div></div><form method="post" class="form-grid">
+<label>Full name *<input name="name" required></label><label>Email<input type="email" name="email"></label><label>Phone<input name="phone"></label><label>Department<input name="department"></label><label>Designation<input name="designation" placeholder="Assistant Professor"></label><label>Joining date<input type="date" name="join_date"></label><div class="form-actions"><button class="btn primary">＋ Add faculty</button></div>
+</form></div>
+<div class="panel"><div class="panel-head"><h2>Faculty directory</h2></div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Designation</th><th>Email</th><th>Action</th></tr></thead><tbody>
+{% for f in faculty %}<tr><td>{{ f.faculty_id }}</td><td><strong>{{ f.name }}</strong></td><td>{{ f.department or '—' }}</td><td>{{ f.designation or '—' }}</td><td>{{ f.email or '—' }}</td><td><form method="post" action="{{ url_for('delete_faculty',item_id=f.faculty_id) }}" onsubmit="return confirm('Delete this faculty member?')"><button class="btn danger small">Delete</button></form></td></tr>{% else %}<tr><td colspan="6" class="empty-cell">No faculty members added.</td></tr>{% endfor %}
+</tbody></table></div></div>{% endblock %}

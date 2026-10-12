@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Students{% endblock %}{% block content %}
+<div class="page-heading"><div><span class="eyebrow">RECORD MANAGEMENT</span><h1>Students</h1><p>Add student information and maintain your records.</p></div><span class="count-pill">{{ students|length }} records</span></div>
+<div class="panel"><div class="panel-head"><div><h2>Add a student</h2><p>Fields marked * are required.</p></div></div>
+<form method="post" class="form-grid">
+  <label>Roll number *<input name="roll_no" required placeholder="e.g. CSE001"></label>
+  <label>Full name *<input name="name" required placeholder="Student full name"></label>
+  <label>Gender<select name="gender"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select></label>
+  <label>Date of birth<input type="date" name="dob"></label>
+  <label>Email<input type="email" name="email" placeholder="student@example.com"></label>
+  <label>Phone<input name="phone" placeholder="Phone number"></label>
+  <label>Department<input name="department" placeholder="Computer Engineering"></label>
+  <label>Admission date<input type="date" name="admission_date"></label>
+  <div class="form-actions"><button class="btn primary" type="submit">＋ Add student</button></div>
+</form></div>
+<div class="panel"><div class="panel-head"><div><h2>Student directory</h2><p>Records stored in MySQL</p></div><input class="search" id="tableSearch" placeholder="Search records…" oninput="filterRows()"></div>
+<div class="table-wrap"><table id="records"><thead><tr><th>Roll no.</th><th>Name</th><th>Department</th><th>Email</th><th>Admission</th><th>Action</th></tr></thead><tbody>
+{% for s in students %}<tr><td><span class="code-chip">{{ s.roll_no }}</span></td><td><strong>{{ s.name }}</strong><small class="cell-sub">{{ s.gender or '—' }}</small></td><td>{{ s.department or '—' }}</td><td>{{ s.email or '—' }}</td><td>{{ s.admission_date|datefmt }}</td><td><form method="post" action="{{ url_for('delete_student', item_id=s.student_id) }}" onsubmit="return confirm('Delete this student? Related records may prevent deletion.')"><button class="btn danger small">Delete</button></form></td></tr>{% else %}<tr><td colspan="6" class="empty-cell">No students yet. Add your first student above.</td></tr>{% endfor %}
+</tbody></table></div></div>
+<script>function filterRows(){let q=document.getElementById('tableSearch').value.toLowerCase();document.querySelectorAll('#records tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')}</script>
+{% endblock %}

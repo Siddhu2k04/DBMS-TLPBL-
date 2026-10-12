@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block title %}Database setup{% endblock %}{% block content %}
+<div class="panel"><h1>Database connection failed</h1><p>Check that MySQL Server is running, run <code>schema.sql</code> in MySQL Workbench, and set your DB environment variables.</p><pre>{{ error }}</pre><p>See <code>README.md</code> for the Windows setup steps.</p></div>
+{% endblock %}

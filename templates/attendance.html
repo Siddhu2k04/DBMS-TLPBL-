@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Attendance{% endblock %}{% block content %}
+<div class="page-heading"><div><span class="eyebrow">DAILY TRACKING</span><h1>Attendance</h1><p>Record and review attendance by student and course.</p></div><span class="count-pill">{{ records|length }} recent records</span></div>
+<div class="panel"><div class="panel-head"><h2>Mark attendance</h2></div>
+{% if not students or not courses %}<div class="note">Add at least one student and one course before recording attendance.</div>{% endif %}
+<form method="post" class="form-grid">
+<label>Student *<select name="student_id" required>{% for s in students %}<option value="{{ s.student_id }}">{{ s.roll_no }} — {{ s.name }}</option>{% endfor %}</select></label>
+<label>Course *<select name="course_code" required>{% for c in courses %}<option value="{{ c.course_code }}">{{ c.course_code }} — {{ c.course_name }}</option>{% endfor %}</select></label>
+<label>Date *<input type="date" name="attendance_date" required value="{{ '' }}"></label><label>Time<input type="time" name="attendance_time"></label>
+<label>Status *<select name="status" required><option value="P">Present</option><option value="A">Absent</option><option value="L">Late</option></select></label>
+<label>Marked by faculty<select name="marked_by"><option value="">Not specified</option>{% for f in faculty %}<option value="{{ f.faculty_id }}">{{ f.name }}</option>{% endfor %}</select></label>
+<div class="form-actions"><button class="btn primary" {% if not students or not courses %}disabled{% endif %}>Save attendance</button></div>
+</form></div>
+<div class="panel"><div class="panel-head"><h2>Recent attendance</h2></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Time</th><th>Status</th><th>Action</th></tr></thead><tbody>
+{% for r in records %}<tr><td>{{ r.attendance_date|datefmt }}</td><td><strong>{{ r.student_name }}</strong><small class="cell-sub">{{ r.roll_no }}</small></td><td>{{ r.course_code }} · {{ r.course_name }}</td><td>{{ r.attendance_time or '—' }}</td><td><span class="status-pill {{ 'good' if r.status=='P' else 'bad' if r.status=='A' else 'warn' }}">{{ {'P':'Present','A':'Absent','L':'Late'}[r.status] }}</span></td><td><form method="post" action="{{ url_for('delete_attendance',item_id=r.attendance_id) }}" onsubmit="return confirm('Delete attendance record?')"><button class="btn danger small">Delete</button></form></td></tr>{% else %}<tr><td colspan="6" class="empty-cell">No attendance recorded.</td></tr>{% endfor %}
+</tbody></table></div></div>{% endblock %}
